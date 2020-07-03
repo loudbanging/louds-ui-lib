@@ -1,0 +1,86 @@
+local lib = {}
+
+function lib:CreateWindow(name)
+    local louduilib = Instance.new("ScreenGui")
+    local Title = Instance.new("Frame")
+    local Name = Instance.new("TextLabel")
+    local Container = Instance.new("Frame")
+    local UIGridLayout = Instance.new("UIGridLayout")
+    local close = Instance.new("TextButton")
+
+    louduilib.Name = "louduilib"
+    louduilib.Parent = game.CoreGui
+    louduilib.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+    Title.Name = "Title"
+    Title.Parent = louduilib
+    Title.Active = true
+    Title.BackgroundColor3 = Color3.fromRGB(155, 155, 255)
+    Title.BorderSizePixel = 0
+    Title.Position = UDim2.new(0.120381862, 0, 0.384673208, 0)
+    Title.Size = UDim2.new(0, 442, 0, 17)
+
+    Container.Name = "Container"
+    Container.Parent = Title
+    Container.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    Container.Position = UDim2.new(0, 0, 1, 0)
+    Container.Size = UDim2.new(0, 442, 0, 147)
+
+    UIGridLayout.Parent = Container
+    UIGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIGridLayout.CellSize = UDim2.new(0.300000012, 10, 0.100000001, -50)
+    UIGridLayout.StartCorner = Enum.StartCorner.BottomLeft
+
+    Name.Name = name
+    Name.Parent = Title
+    Name.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Name.BackgroundTransparency = 1.000
+    Name.Position = UDim2.new(0.244343922, 0, 0, 0)
+    Name.Size = UDim2.new(0, 200, 0, 17)
+    Name.Font = Enum.Font.GothamBold
+    Name.Text = name
+    Name.TextColor3 = Color3.fromRGB(0, 0, 0)
+    Name.TextScaled = true
+    Name.TextSize = 14.000
+    Name.TextWrapped = true
+
+    close.Name = "close"
+    close.Parent = Title
+    close.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    close.BackgroundTransparency = 1.000
+    close.Position = UDim2.new(0.907239795, 0, 8.35294151, 0)
+    close.Size = UDim2.new(0, 41, 0, 22)
+    close.Font = Enum.Font.GothamBlack
+    close.Text = "Unload"
+    close.TextColor3 = Color3.fromRGB(255, 255, 255)
+    close.TextScaled = true
+    close.TextSize = 14.000
+    close.TextWrapped = true
+
+    close.MouseButton1Down:connect(function()
+        louduilib:Destroy()
+    end)
+
+    local buttonlib = {}
+
+    function buttonlib:CreateButton(name, callback)
+        local callback = callback or function() end
+        local Button = Instance.new("TextButton")
+
+        Button.Name = name
+        Button.Parent = Container
+        Button.BackgroundColor3 = Color3.fromRGB(155, 115, 255)
+        Button.BorderSizePixel = 0
+        Button.Size = UDim2.new(0, 200, 0, 50)
+        Button.Font = Enum.Font.GothamBold
+        Button.TextColor3 = Color3.fromRGB(0, 0, 0)
+        Button.TextSize = 14.000
+        Button.Text = name
+
+        Button.MouseButton1Down:connect(function()
+            pcall(callback)
+        end)
+    end
+    return buttonlib
+end
+return lib
