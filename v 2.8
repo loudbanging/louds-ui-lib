@@ -1,0 +1,164 @@
+local lib = {}
+
+function lib:CreateWindow(name)
+    local louduilib = Instance.new("ScreenGui")
+    local Title = Instance.new("Frame")
+    local Name = Instance.new("TextLabel")
+    local Container = Instance.new("Frame")
+    local UIGridLayout = Instance.new("UIGridLayout")
+    local close = Instance.new("TextButton")
+
+    --[[Title.Active = true
+    Title.Selectable = true
+    Title.Draggable = true
+    --]]
+
+    local UserInputService = game:GetService("UserInputService")
+
+    local gui = Title
+
+    local dragging
+    local dragInput
+    local dragStart
+    local startPos
+
+    local function update(input)
+        local delta = input.Position - dragStart
+        gui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+
+    gui.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = gui.Position
+            
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    gui.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
+        end
+    end)
+
+    louduilib.Name = "louduilib"
+    louduilib.Parent = game.CoreGui
+    louduilib.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+    Title.Name = "Title"
+    Title.Parent = louduilib
+    Title.Active = true
+    Title.BackgroundColor3 = Color3.fromRGB(155, 155, 255)
+    Title.BorderSizePixel = 0
+    Title.Position = UDim2.new(0.120381862, 0, 0.384673208, 0)
+    Title.Size = UDim2.new(0, 442, 0, 17)
+
+    Name.Name = name
+    Name.Parent = Title
+    Name.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Name.BackgroundTransparency = 1.000
+    Name.Position = UDim2.new(0.244343922, 0, 0, 0)
+    Name.Size = UDim2.new(0, 200, 0, 17)
+    Name.Font = Enum.Font.GothamBold
+    Name.Text = name
+    Name.TextColor3 = Color3.fromRGB(0, 0, 0)
+    Name.TextScaled = true
+    Name.TextSize = 14.000
+    Name.TextWrapped = true
+
+    Container.Name = "Container"
+    Container.Parent = Title
+    Container.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    Container.Position = UDim2.new(0, 0, 1, 0)
+    Container.Size = UDim2.new(0, 442, 0, 173)
+
+    UIGridLayout.Parent = Container
+    UIGridLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    UIGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIGridLayout.CellPadding = UDim2.new(0, 3, 0, -40)
+    UIGridLayout.CellSize = UDim2.new(0.300000012, 10, 0.100000001, -50)
+    UIGridLayout.StartCorner = Enum.StartCorner.BottomLeft
+
+    close.Name = "close"
+    close.Parent = Title
+    close.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    close.BackgroundTransparency = 1.000
+    close.Position = UDim2.new(0.907239795, 0, 9.88235283, 0)
+    close.Size = UDim2.new(0, 41, 0, 22)
+    close.Font = Enum.Font.GothamBlack
+    close.Text = "Unload"
+    close.TextColor3 = Color3.fromRGB(255, 255, 255)
+    close.TextScaled = true
+    close.TextSize = 14.000
+    close.TextWrapped = true
+
+    close.MouseButton1Down:connect(function()
+        louduilib:Destroy()
+    end)
+
+    local buttonlib = {}
+
+    function buttonlib:CreateButton(text, toggle, callback)
+        local callback = callback or function() end
+        local Button = Instance.new("TextButton")
+        local TextLabel = Instance.new("TextLabel")
+        local toggled = false
+
+        Button.Name = text
+        Button.Parent = Container
+        Button.BackgroundColor3 = Color3.fromRGB(155, 115, 255)
+        Button.BorderSizePixel = 0
+        Button.Size = UDim2.new(0, 200, 0, 50)
+        Button.Font = Enum.Font.GothamBold
+        Button.TextColor3 = Color3.fromRGB(0, 0, 0)
+        Button.TextSize = 14.000
+        Button.Text = text
+
+        TextLabel.Parent = Button
+        TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        TextLabel.BackgroundTransparency = 1.000
+        TextLabel.Position = UDim2.new(0.0737499446, 0, 1.30011606, 0)
+        TextLabel.Size = UDim2.new(0, 120, 0, 27)
+        TextLabel.Font = Enum.Font.GothamBlack
+        TextLabel.Text = "Toggled: X"
+        TextLabel.TextColor3 = Color3.fromRGB(159, 0, 2)
+        TextLabel.TextSize = 14.000
+
+        if toggle == false then
+            TextLabel:Destroy()
+        end
+
+
+        Button.MouseButton1Down:connect(function()
+            if toggle == true then
+                toggled = not toggled
+                if toggled then
+                    TextLabel.Text = "Toggled: 💯️" 
+                    TextLabel.TextColor3 = Color3.fromRGB(12, 159, 41)
+                    else
+                        TextLabel.Text = "Toggled: X" 
+                        TextLabel.TextColor3 = Color3.fromRGB(159, 0, 2)
+                end                
+            end
+            if toggle == false then
+                pcall(callback)
+            elseif toggle == true then
+                pcall(callback, toggled)
+            end
+        end)
+    end
+    return buttonlib
+end
+return lib
