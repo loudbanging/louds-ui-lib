@@ -376,6 +376,7 @@ main:CreateButton("Print everyones items", false, function()
         end
     end
 end)
-main:CreateButton("Infinite Yield", false, function()
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+main:CreateButton("rejoin another server", false, function()
+    game:GetService("TeleportService"):Teleport(2686500207)
+    syn.queue_on_teleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/loudbanging/louds-ui-lib/master/pooanus'))()")
 end)
