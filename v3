@@ -350,3 +350,4 @@ function lib:CreateWindow(name)
     end
     return buttonlib
 end
+return lib
